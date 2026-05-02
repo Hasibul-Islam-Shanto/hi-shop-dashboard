@@ -34,7 +34,7 @@ const EditProductPage = () => {
     error: fetchError,
     reload,
   } = useGetProduct(id);
-  console.log("🚀 ~ EditProductPage ~ product:", product?.basePrice);
+  console.log("🚀 ~ EditProductPage ~ product:", product);
   const { update, isUpdating, error: updateError } = useUpdateProduct();
 
   const methods = useForm<UpdateProductValues>({
