@@ -126,7 +126,6 @@ const AddProductPage = () => {
           </div>
         </div>
 
-        {/* Content */}
         <div className="max-w-5xl mx-auto px-6 py-6">
           {error && (
             <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3 mb-6">
@@ -136,9 +135,7 @@ const AddProductPage = () => {
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            {/* Left Column */}
             <div className="lg:col-span-2 space-y-5">
-              {/* Basic Info */}
               <div className="bg-card rounded-2xl p-5 ghost-border">
                 <span className="label-text text-primary text-[10px]">
                   DETAILS
@@ -219,13 +216,10 @@ const AddProductPage = () => {
                 </div>
               </div>
 
-              {/* Variants */}
               <VariantFields />
             </div>
 
-            {/* Right Column */}
             <div className="space-y-5">
-              {/* Organization */}
               <div className="bg-card rounded-2xl p-5 ghost-border">
                 <span className="label-text text-primary text-[10px]">
                   ORGANIZATION

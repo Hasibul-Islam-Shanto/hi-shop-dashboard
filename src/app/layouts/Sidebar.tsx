@@ -1,4 +1,4 @@
-import { Settings, X, LogOut } from "lucide-react";
+import { X, LogOut } from "lucide-react";
 import { NavLink } from "@/shared/components/NavLink";
 import { sidebarLinks } from "@/shared/constants/navigation";
 import useLogout from "@/hooks/useLogout";
@@ -69,34 +69,14 @@ const SidebarContent = ({ onClose }: { onClose: () => void }) => {
       </nav>
 
       <div className="mt-auto pt-3 border-t border-outline-variant/20">
-        <NavLink
-          to="/admin/settings"
-          onClick={onClose}
-          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
-          activeClassName="bg-primary/10 text-primary font-semibold"
+        <button
+          onClick={handleSignOut}
+          aria-label="Sign out"
+          className="text-on-surface-variant hover:text-destructive transition-colors px-2 py-3 flex items-center justify-between w-full cursor-pointer"
         >
-          <Settings className="h-4 w-4 shrink-0" />
-          <span>Settings</span>
-        </NavLink>
-
-        <div className="flex items-center gap-2.5 mt-3 px-2 py-2 rounded-lg group hover:bg-surface-container transition-colors">
-          <div className="h-8 w-8 rounded-full aurora-gradient flex items-center justify-center text-xs font-bold text-primary-foreground shrink-0">
-            EV
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-on-surface truncate">
-              Elena Vance
-            </p>
-            <p className="text-[10px] text-on-surface-variant">Super Admin</p>
-          </div>
-          <button
-            onClick={handleSignOut}
-            aria-label="Sign out"
-            className="text-on-surface-variant hover:text-destructive transition-colors opacity-0 group-hover:opacity-100 p-1"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-          </button>
-        </div>
+          Logout
+          <LogOut className="h-3.5 w-3.5" />
+        </button>
       </div>
     </>
   );

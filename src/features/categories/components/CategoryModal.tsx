@@ -87,7 +87,6 @@ const CategoryModal = ({
   return (
     <div className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl p-5 w-full max-w-md ghost-border shadow-(--shadow-xl) animate-in fade-in-0 zoom-in-95 duration-200">
-        {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-base font-bold text-on-surface">
             {isEditing ? "Edit Category" : "Add Category"}
@@ -118,7 +117,6 @@ const CategoryModal = ({
             )}
           </div>
 
-          {/* Slug */}
           <div>
             <label className="label-text text-[10px] mb-1 block">
               Slug
@@ -134,7 +132,6 @@ const CategoryModal = ({
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label className="label-text text-[10px] mb-1 block">
               Description
@@ -152,7 +149,6 @@ const CategoryModal = ({
             )}
           </div>
 
-          {/* Parent Category */}
           <div>
             <label className="label-text text-[10px] mb-1 block">
               Parent Category
@@ -178,7 +174,6 @@ const CategoryModal = ({
             )}
           </div>
 
-          {/* Actions */}
           <div className="flex gap-2 pt-1">
             <Button
               type="button"

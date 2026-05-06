@@ -39,9 +39,7 @@ const OAuthButtons = () => {
         variant="outline"
         size="sm"
         className="w-full"
-        onClick={() => {
-          /* TODO: wire OAuth provider */
-        }}
+        onClick={() => {}}
       >
         <GoogleIcon />
         Google
@@ -51,9 +49,7 @@ const OAuthButtons = () => {
         variant="outline"
         size="sm"
         className="w-full"
-        onClick={() => {
-          /* TODO: wire OAuth provider */
-        }}
+        onClick={() => {}}
       >
         <GitHubIcon />
         GitHub

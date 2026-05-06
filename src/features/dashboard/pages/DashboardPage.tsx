@@ -35,9 +35,7 @@ const DashboardPage = () => {
         </Button>
       </PageHeading>
 
-      {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        {/* Revenue */}
         <div className="bg-card rounded-xl p-5 ghost-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:-translate-y-1 transition-all duration-300">
           <div className="flex items-start justify-between mb-3">
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -61,7 +59,6 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Active Orders */}
         <div className="bg-card rounded-xl p-5 ghost-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:-translate-y-1 transition-all duration-300">
           <div className="flex items-start justify-between mb-3">
             <div className="h-10 w-10 rounded-lg bg-secondary/10 flex items-center justify-center">
@@ -85,7 +82,6 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Inventory */}
         <div className="bg-card rounded-xl p-5 ghost-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:-translate-y-1 transition-all duration-300 sm:col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-xs font-bold text-on-surface">Inventory</h3>
@@ -107,7 +103,6 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Recent Orders */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -177,7 +172,6 @@ const DashboardPage = () => {
             </table>
           </div>
 
-          {/* Pagination */}
           <div className="flex items-center justify-between px-5 py-3 border-t border-outline-variant/10">
             <p className="text-xs text-on-surface-variant">1–10 of 2,401</p>
             <div className="flex items-center gap-1">
@@ -204,7 +198,6 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Insight + System Health */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-card rounded-xl p-6 ghost-border shadow-[var(--shadow-sm)]">
           <span className="inline-block bg-primary text-primary-foreground text-[10px] font-bold px-2.5 py-0.5 rounded-full mb-3">
@@ -243,7 +236,6 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* FAB */}
       <button className="fixed bottom-6 right-6 h-12 w-12 rounded-full bg-primary flex items-center justify-center shadow-[0_4px_14px_hsl(var(--primary)/0.3)] hover:scale-105 hover:shadow-[0_6px_20px_hsl(var(--primary)/0.4)] transition-all duration-200 z-10">
         <Plus className="h-5 w-5 text-primary-foreground" />
       </button>

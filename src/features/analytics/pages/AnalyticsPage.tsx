@@ -34,7 +34,6 @@ const AnalyticsPage = () => {
     <div className="px-4 sm:px-6 py-6">
       <PageHeading label="Insights" title="Analytics" />
 
-      {/* Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
         {metrics.map((m) => (
           <div
@@ -55,9 +54,7 @@ const AnalyticsPage = () => {
         ))}
       </div>
 
-      {/* Revenue Trend + Top Products */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-        {/* Bar Chart */}
         <div className="lg:col-span-2 bg-card rounded-xl p-5 ghost-border shadow-[var(--shadow-sm)]">
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-sm font-bold text-on-surface">Revenue Trend</h3>
@@ -89,7 +86,6 @@ const AnalyticsPage = () => {
           </div>
         </div>
 
-        {/* Top Products */}
         <div className="bg-card rounded-xl p-5 ghost-border shadow-[var(--shadow-sm)]">
           <h3 className="text-sm font-bold text-on-surface mb-4">Top Products</h3>
           <div className="space-y-3.5">
@@ -107,7 +103,6 @@ const AnalyticsPage = () => {
         </div>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="bg-card rounded-xl p-5 ghost-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:-translate-y-1 transition-all duration-300">
           <h3 className="text-sm font-bold text-on-surface mb-1">Conversion Rate</h3>

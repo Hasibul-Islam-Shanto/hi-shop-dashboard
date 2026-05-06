@@ -1,12 +1,21 @@
 import { useState } from "react";
-import { Search, Plus, Package } from "lucide-react";
-import { Pencil, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  Loader2,
+  Package,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/shared/components/PageHeading";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { Pagination } from "@/shared/components/Pagination";
 import { useNavigate } from "react-router-dom";
 import useGetProducts from "../hooks/useGetProducts";
+import useDeleteProduct from "../hooks/useDeleteProduct";
+import type { IProduct } from "../schemas/types";
 
 const stockStatusColors: Record<string, string> = {
   "In Stock": "text-tertiary bg-tertiary/10",
@@ -34,13 +43,32 @@ const InventoryPage = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const { products, meta, isLoading } = useGetProducts(page, 20);
+  const [deleteTarget, setDeleteTarget] = useState<IProduct | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const { products, meta, isLoading, reload } = useGetProducts(page, 20);
+  const {
+    remove,
+    isDeleting,
+    error: deleteHookError,
+  } = useDeleteProduct();
 
   const filtered = products.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.category.name.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setActionError(null);
+    const result = await remove(deleteTarget.id);
+    if (result.success) {
+      setDeleteTarget(null);
+      reload();
+    } else {
+      setActionError(result.error ?? deleteHookError ?? "Failed to delete.");
+    }
+  };
 
   return (
     <div className="px-4 sm:px-6 py-6">
@@ -59,6 +87,64 @@ const InventoryPage = () => {
           <Plus className="h-3.5 w-3.5 mr-1.5" /> Add Product
         </Button>
       </PageHeading>
+
+      {actionError && (
+        <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3 mb-4">
+          <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
+          <p className="text-xs text-destructive font-medium">{actionError}</p>
+        </div>
+      )}
+
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-2xl p-5 w-full max-w-sm ghost-border shadow-(--shadow-xl) animate-in fade-in-0 zoom-in-95 duration-200">
+            <h2 className="text-base font-bold text-on-surface mb-2">
+              Delete product?
+            </h2>
+            <p className="text-sm text-on-surface-variant mb-1">
+              You are about to delete{" "}
+              <span className="font-semibold text-on-surface">
+                {deleteTarget.name}
+              </span>
+              . This removes the product and its variants and images.
+            </p>
+            <p className="text-xs text-on-surface-variant mb-5">
+              This action cannot be undone.
+            </p>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => {
+                  setDeleteTarget(null);
+                  setActionError(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                className="flex-1 gap-1.5"
+                disabled={isDeleting}
+                onClick={handleDelete}
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    Deleting…
+                  </>
+                ) : (
+                  "Delete"
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="sm:hidden flex items-center bg-surface-container rounded-lg px-3 py-1.5 ghost-border mb-4">
         <Search className="h-3.5 w-3.5 text-on-surface-variant mr-2 shrink-0" />
@@ -204,6 +290,11 @@ const InventoryPage = () => {
                             <Pencil className="h-3.5 w-3.5" />
                           </button>
                           <button
+                            type="button"
+                            onClick={() => {
+                              setDeleteTarget(product);
+                              setActionError(null);
+                            }}
                             className="text-on-surface-variant hover:text-destructive transition-colors p-1"
                             aria-label="Delete product"
                           >

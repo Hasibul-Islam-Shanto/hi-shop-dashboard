@@ -182,7 +182,6 @@ const CategoriesPage = () => {
         </div>
       )}
 
-      {/* Table */}
       <div className="bg-card rounded-xl overflow-hidden ghost-border shadow-[var(--shadow-sm)]">
         {isLoading ? (
           <div className="flex items-center justify-center py-16 gap-2 text-on-surface-variant">

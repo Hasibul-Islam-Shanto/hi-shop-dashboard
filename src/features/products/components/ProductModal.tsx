@@ -35,7 +35,6 @@ const ProductModal = ({
   return (
     <div className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl p-5 w-full max-w-md ghost-border shadow-(--shadow-xl) animate-in fade-in-0 zoom-in-95 duration-200">
-        {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-base font-bold text-on-surface">
             {isEditing ? "Edit Product" : "Add Product"}
@@ -49,7 +48,6 @@ const ProductModal = ({
         </div>
 
         <div className="space-y-3">
-          {/* Image upload */}
           <div>
             <label className="label-text text-[10px] mb-1 block">Image</label>
             <input
@@ -79,7 +77,6 @@ const ProductModal = ({
             </button>
           </div>
 
-          {/* Name */}
           <div>
             <label className="label-text text-[10px] mb-1 block">Name</label>
             <Input
@@ -89,7 +86,6 @@ const ProductModal = ({
             />
           </div>
 
-          {/* Price + Stock */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="label-text text-[10px] mb-1 block">
@@ -117,7 +113,6 @@ const ProductModal = ({
             </div>
           </div>
 
-          {/* Category */}
           <div>
             <label className="label-text text-[10px] mb-1 block">
               Category
@@ -131,7 +126,6 @@ const ProductModal = ({
             />
           </div>
 
-          {/* Material */}
           <div>
             <label className="label-text text-[10px] mb-1 block">
               Material
@@ -145,7 +139,6 @@ const ProductModal = ({
             />
           </div>
 
-          {/* Actions */}
           <div className="flex gap-2 pt-1">
             <Button
               variant="outline"

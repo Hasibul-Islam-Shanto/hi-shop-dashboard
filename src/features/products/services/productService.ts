@@ -28,6 +28,10 @@ export const updateProduct = async (id: string, data: UpdateProductValues) => {
   return response.data;
 };
 
+export const deleteProduct = async (id: string): Promise<void> => {
+  await axiosInstance.delete(`/products/${id}`);
+};
+
 export const addVariant = async (productId: string, data: VariantFormValues) => {
   const response = await axiosInstance.post(`/products/${productId}/variants`, data);
   return response.data;

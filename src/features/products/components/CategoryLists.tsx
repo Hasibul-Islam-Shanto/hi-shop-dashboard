@@ -26,7 +26,6 @@ const CategoryLists = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -38,14 +37,12 @@ const CategoryLists = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Focus search on open
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => searchRef.current?.focus(), 50);
     }
   }, [isOpen]);
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -68,7 +65,6 @@ const CategoryLists = () => {
     }
   });
 
-  // Flat ordered list: parent first, then its children indented
   const ordered: { item: CategoryItem; depth: number }[] = [];
   const buildOrdered = (items: CategoryItem[], depth: number) => {
     items.forEach((item) => {
@@ -78,7 +74,6 @@ const CategoryLists = () => {
   };
   buildOrdered(topLevel, 0);
 
-  // Add any orphaned items (parentId set but parent not in list)
   categories.forEach((c) => {
     if (!ordered.find((o) => o.item.id === c.id)) {
       ordered.push({ item: c, depth: 0 });
@@ -107,7 +102,6 @@ const CategoryLists = () => {
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Trigger */}
       <button
         type="button"
         onClick={() => !isLoading && !loadError && setIsOpen((v) => !v)}
@@ -156,10 +150,8 @@ const CategoryLists = () => {
         </span>
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
         <div className="absolute z-50 w-full mt-1.5 bg-card rounded-xl ghost-border shadow-(--shadow-xl) overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
-          {/* Search */}
           <div className="px-3 pt-3 pb-2">
             <div className="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2 ghost-border">
               <Search className="h-3.5 w-3.5 text-on-surface-variant shrink-0" />
@@ -183,7 +175,6 @@ const CategoryLists = () => {
             </div>
           </div>
 
-          {/* List */}
           <div className="max-h-52 overflow-y-auto pb-2">
             {filtered.length === 0 ? (
               <p className="text-xs text-on-surface-variant text-center py-6">
@@ -228,7 +219,6 @@ const CategoryLists = () => {
             )}
           </div>
 
-          {/* Footer */}
           <div className="px-3 py-2 border-t border-outline-variant/10">
             <p className="text-[10px] text-on-surface-variant">
               {categories.length} categor{categories.length === 1 ? "y" : "ies"} available
