@@ -1,5 +1,6 @@
 import { useState } from "react";
-import axios from "@/axios/axios.config";
+import { isAxiosError } from "axios";
+import axiosInstance from "@/axios/axios.config";
 import { useCookies } from "react-cookie";
 import { useAuthStore } from "@/shared/store/useAuthStore";
 
@@ -24,7 +25,7 @@ const useSignin = () => {
     setIsSigningIn(true);
     setError(null);
     try {
-      const { data } = await axios.post("/auth/login", { email, password });
+      const { data } = await axiosInstance.post("/auth/login", { email, password });
       const { accessToken, refreshToken, user } = data;
       setCookie("accessToken", accessToken);
       setCookie("refreshToken", refreshToken);
@@ -32,7 +33,13 @@ const useSignin = () => {
       return { success: true };
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : "An unknown error occurred";
+        isAxiosError(err) && err.response?.data?.message
+          ? Array.isArray(err.response.data.message)
+            ? err.response.data.message.join(", ")
+            : err.response.data.message
+          : err instanceof Error
+          ? err.message
+          : "An unknown error occurred";
       setError(message);
       return { success: false, error: message };
     } finally {

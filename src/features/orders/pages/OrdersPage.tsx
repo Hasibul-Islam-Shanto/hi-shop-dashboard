@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, ChevronDown, Eye } from "lucide-react";
 import { PageHeading } from "@/shared/components/PageHeading";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { Pagination } from "@/shared/components/Pagination";
 import OrderDetailModal, {
   orderStatusColors,
 } from "@/features/orders/components/OrderDetailModal";
@@ -19,6 +20,8 @@ const STATUS_OPTIONS: Array<"All" | OrderStatus> = [
   "REFUNDED",
 ];
 
+const LIMIT = 20;
+
 const formatDate = (value: string | null | undefined): string => {
   if (!value || typeof value !== "string") return "—";
   const d = new Date(value);
@@ -32,19 +35,29 @@ const formatDate = (value: string | null | undefined): string => {
 };
 
 const OrdersPage = () => {
-  const { orders, setOrders, isLoading, error } = useGetOrders();
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"All" | OrderStatus>("All");
+  const [page, setPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+  const { orders, setOrders, meta, isLoading, error } = useGetOrders({
+    page,
+    limit: LIMIT,
+    status: filterStatus,
+  });
 
   const filtered = orders.filter((o) => {
     const customerName = `${o.user.firstName} ${o.user.lastName}`;
-    const matchSearch =
+    return (
       customerName.toLowerCase().includes(search.toLowerCase()) ||
-      o.id.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = filterStatus === "All" || o.status === filterStatus;
-    return matchSearch && matchStatus;
+      o.id.toLowerCase().includes(search.toLowerCase())
+    );
   });
+
+  const handleStatusFilterChange = (status: "All" | OrderStatus) => {
+    setFilterStatus(status);
+    setPage(1);
+  };
 
   const updateStatus = (orderId: string, newStatus: OrderStatus) => {
     setOrders((prev) =>
@@ -75,7 +88,7 @@ const OrdersPage = () => {
           <select
             value={filterStatus}
             onChange={(e) =>
-              setFilterStatus(e.target.value as "All" | OrderStatus)
+              handleStatusFilterChange(e.target.value as "All" | OrderStatus)
             }
             className="appearance-none bg-surface-container text-sm text-on-surface rounded-lg px-3 py-1.5 pr-7 ghost-border focus:outline-none cursor-pointer"
           >
@@ -212,11 +225,15 @@ const OrdersPage = () => {
           </table>
         </div>
 
-        <div className="px-5 py-3 border-t border-outline-variant/10">
-          <p className="text-xs text-on-surface-variant">
-            {filtered.length} of {orders.length} orders
-          </p>
-        </div>
+        {meta && (
+          <Pagination
+            page={meta.page}
+            totalPages={meta.totalPages}
+            total={meta.total}
+            limit={meta.limit}
+            onPageChange={setPage}
+          />
+        )}
       </div>
     </div>
   );
