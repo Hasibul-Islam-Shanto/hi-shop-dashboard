@@ -9,18 +9,23 @@ import {
   Check,
   X,
   AlertCircle,
+  SlidersHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   variantSchema,
   updateVariantSchema,
+  adjustInventorySchema,
   type VariantFormValues,
   type UpdateVariantValues,
+  type AdjustInventoryValues,
 } from "../schemas/product.schema";
 import type { ProductVariant } from "../schemas/types";
 import useVariantMutations from "../hooks/useVariantMutations";
 import { toast } from "sonner";
+import { adjustInventory } from "../services/productService";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 interface EditVariantFieldsProps {
   productId: string;
@@ -45,6 +50,7 @@ interface VariantEditRowProps {
 
 const VariantEditRow = ({
   variant,
+  productId,
   onRefresh,
   updatingId,
   deletingId,
@@ -52,8 +58,10 @@ const VariantEditRow = ({
   onDelete,
 }: VariantEditRowProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isAdjusting, setIsAdjusting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [rowError, setRowError] = useState<string | null>(null);
+  const [isSavingInventory, setIsSavingInventory] = useState(false);
 
   const {
     register,
@@ -72,6 +80,19 @@ const VariantEditRow = ({
     },
   });
 
+  const {
+    register: registerInventory,
+    handleSubmit: handleSubmitInventory,
+    reset: resetInventory,
+    formState: { errors: inventoryErrors },
+  } = useForm<AdjustInventoryValues>({
+    resolver: zodResolver(adjustInventorySchema) as Resolver<AdjustInventoryValues>,
+    defaultValues: {
+      stock: variant.stock,
+      note: "",
+    },
+  });
+
   const handleEdit = () => {
     reset({
       sku: variant.sku,
@@ -83,6 +104,12 @@ const VariantEditRow = ({
     });
     setIsEditing(true);
     setRowError(null);
+  };
+
+  const handleAdjust = () => {
+    resetInventory({ stock: variant.stock, note: "" });
+    setRowError(null);
+    setIsAdjusting(true);
   };
 
   const handleCancel = () => {
@@ -119,6 +146,25 @@ const VariantEditRow = ({
         duration: 2000,
         position: "top-center",
       });
+    }
+  };
+
+  const onInventorySubmit = async (data: AdjustInventoryValues) => {
+    setRowError(null);
+    setIsSavingInventory(true);
+    try {
+      await adjustInventory(productId, variant.id, data);
+      setIsAdjusting(false);
+      onRefresh();
+      toast.success("Inventory adjusted", {
+        description: "The variant stock has been updated.",
+        duration: 2000,
+        position: "top-center",
+      });
+    } catch (err) {
+      setRowError(getApiErrorMessage(err, "Failed to adjust inventory."));
+    } finally {
+      setIsSavingInventory(false);
     }
   };
 
@@ -242,6 +288,87 @@ const VariantEditRow = ({
     );
   }
 
+  if (isAdjusting) {
+    return (
+      <div className="bg-secondary/5 rounded-xl p-4 ghost-border border-secondary/20">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-semibold text-secondary">
+            Adjust inventory
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setIsAdjusting(false);
+              setRowError(null);
+            }}
+            className="text-on-surface-variant hover:text-on-surface p-1 rounded-lg transition-colors"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        {rowError && (
+          <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2 mb-3">
+            <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+            <p className="text-xs text-destructive">{rowError}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmitInventory(onInventorySubmit)}>
+          <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-3">
+            <div>
+              <label className="label-text text-[10px] mb-1 block">
+                New Stock
+              </label>
+              <Input type="number" min={0} {...registerInventory("stock")} />
+              {inventoryErrors.stock && (
+                <p className="text-xs text-destructive mt-1">
+                  {inventoryErrors.stock.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="label-text text-[10px] mb-1 block">Note</label>
+              <Input
+                {...registerInventory("note")}
+                placeholder="Restocked from supplier shipment"
+              />
+              {inventoryErrors.note && (
+                <p className="text-xs text-destructive mt-1">
+                  {inventoryErrors.note.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-2 mt-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              onClick={() => setIsAdjusting(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              size="sm"
+              className="flex-1 gap-1.5"
+              disabled={isSavingInventory}
+            >
+              {isSavingInventory ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Check className="h-3.5 w-3.5" />
+              )}
+              Save Stock
+            </Button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-surface-container-low rounded-xl px-4 py-3 ghost-border">
       {rowError && (
@@ -329,6 +456,13 @@ const VariantEditRow = ({
                 className="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-lg hover:bg-surface-container"
               >
                 <Pencil className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleAdjust}
+                className="text-on-surface-variant hover:text-secondary transition-colors p-1.5 rounded-lg hover:bg-surface-container"
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" />
               </button>
               <button
                 type="button"

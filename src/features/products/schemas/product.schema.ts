@@ -82,8 +82,14 @@ export const updateVariantSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+export const adjustInventorySchema = z.object({
+  stock: z.coerce.number().int("Must be a whole number").min(0, "Min 0"),
+  note: z.string().min(1, "Note is required").max(255),
+});
+
 export type ProductFormValues = z.infer<typeof productSchema>;
 export type VariantFormValues = z.infer<typeof variantSchema>;
 export type ImageFormValues = z.infer<typeof imageSchema>;
 export type UpdateProductValues = z.infer<typeof updateProductSchema>;
 export type UpdateVariantValues = z.infer<typeof updateVariantSchema>;
+export type AdjustInventoryValues = z.infer<typeof adjustInventorySchema>;

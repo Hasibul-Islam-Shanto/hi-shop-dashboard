@@ -18,6 +18,11 @@ const EditProductPage = lazy(
   () => import("@/features/products/pages/EditProductPage")
 );
 const OrdersPage = lazy(() => import("@/features/orders/pages/OrdersPage"));
+const UsersPage = lazy(() => import("@/features/users/pages/UsersPage"));
+const ReviewsPage = lazy(() => import("@/features/reviews/pages/ReviewsPage"));
+const DiscountsPage = lazy(
+  () => import("@/features/discounts/pages/DiscountsPage")
+);
 const AnalyticsPage = lazy(
   () => import("@/features/analytics/pages/AnalyticsPage")
 );
@@ -42,6 +47,9 @@ const AppRouter = () => (
               <Route path="inventory/:id/edit" element={<EditProductPage />} />
               <Route path="categories" element={<CategoriesPage />} />
               <Route path="orders" element={<OrdersPage />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="reviews" element={<ReviewsPage />} />
+              <Route path="discounts" element={<DiscountsPage />} />
               <Route path="analytics" element={<AnalyticsPage />} />
             </Route>
           </Route>

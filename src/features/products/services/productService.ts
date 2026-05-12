@@ -5,6 +5,7 @@ import type {
   VariantFormValues,
   UpdateVariantValues,
   ImageFormValues,
+  AdjustInventoryValues,
 } from "../schemas/product.schema";
 import type { IProduct, ProductsResponse } from "../schemas/types";
 
@@ -54,6 +55,18 @@ export const deleteVariant = async (
   variantId: string
 ): Promise<void> => {
   await axiosInstance.delete(`/products/${productId}/variants/${variantId}`);
+};
+
+export const adjustInventory = async (
+  productId: string,
+  variantId: string,
+  data: AdjustInventoryValues,
+) => {
+  const response = await axiosInstance.patch(
+    `/products/${productId}/variants/${variantId}/inventory`,
+    data,
+  );
+  return response.data;
 };
 
 export const addImage = async (productId: string, data: ImageFormValues) => {

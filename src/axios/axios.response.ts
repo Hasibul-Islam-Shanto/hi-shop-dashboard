@@ -4,7 +4,8 @@ import {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { memoizedRefreshToken } from "./axios.helper";
+import { clearTokens, memoizedRefreshToken } from "./axios.helper";
+import { useAuthStore } from "@/shared/store/useAuthStore";
 
 interface RetryableRequest extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -25,12 +26,15 @@ export const createResponseInterceptor = (instance: AxiosInstance) => {
     ) {
       original._retry = true;
 
-      const newToken = await memoizedRefreshToken();
+      const newToken = await memoizedRefreshToken().catch(() => null);
 
       if (newToken) {
         original.headers.Authorization = `Bearer ${newToken}`;
         return instance.request(original);
       }
+
+      clearTokens();
+      useAuthStore.getState().logout();
     }
 
     return Promise.reject(error);

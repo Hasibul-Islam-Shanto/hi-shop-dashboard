@@ -44,11 +44,41 @@ export interface Order {
   shippingAddressId: string;
   discountId: string | null;
   status: OrderStatus;
+  subtotalAmount?: number;
+  discountAmount?: number;
+  shippingFee?: number;
+  taxAmount?: number;
   totalAmount: number;
+  shippingMethod?: string;
+  courierName?: string | null;
+  trackingNumber?: string | null;
+  shippedAt?: string | null;
+  deliveredAt?: string | null;
+  shippingStreet?: string;
+  shippingCity?: string;
+  shippingState?: string;
+  shippingPostalCode?: string;
+  shippingCountry?: string;
   notes: string | null;
   createdAt: string | null;
   updatedAt: string | null;
   user: OrderUser;
   items: OrderItem[];
   payment: unknown | null;
+}
+
+export interface OrderStatusLog {
+  id: string;
+  orderId: string;
+  status: OrderStatus;
+  note: string | null;
+  createdAt: string;
+}
+
+export interface UpdateShippingValues {
+  shippingMethod?: string;
+  courierName?: string;
+  trackingNumber?: string;
+  shippedAt?: string;
+  deliveredAt?: string;
 }

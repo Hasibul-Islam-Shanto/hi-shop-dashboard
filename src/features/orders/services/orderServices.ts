@@ -1,5 +1,11 @@
 import axiosInstance from "@/axios/axios.config";
-import type { Order, OrderStatus, PaginationMeta } from "../schemas/types";
+import type {
+  Order,
+  OrderStatus,
+  OrderStatusLog,
+  PaginationMeta,
+  UpdateShippingValues,
+} from "../schemas/types";
 
 export interface OrdersResponse {
   data: Order[];
@@ -25,9 +31,29 @@ export const getOrders = async (params?: GetOrdersParams): Promise<OrdersRespons
 export const updateOrderStatus = async (
   orderId: string,
   status: OrderStatus,
+  note?: string,
 ): Promise<Order> => {
   const response = await axiosInstance.patch(`/orders/${orderId}/status`, {
     status,
+    ...(note?.trim() ? { note: note.trim() } : {}),
   });
+  return response.data;
+};
+
+export const updateOrderShipping = async (
+  orderId: string,
+  values: UpdateShippingValues,
+): Promise<Order> => {
+  const payload = Object.fromEntries(
+    Object.entries(values).filter(([, value]) => value !== undefined),
+  );
+  const response = await axiosInstance.patch(`/orders/${orderId}/shipping`, payload);
+  return response.data;
+};
+
+export const getOrderStatusLogs = async (
+  orderId: string,
+): Promise<OrderStatusLog[]> => {
+  const response = await axiosInstance.get(`/orders/${orderId}/status-logs`);
   return response.data;
 };

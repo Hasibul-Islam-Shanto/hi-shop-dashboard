@@ -6,7 +6,7 @@ import type {
 } from "../schemas/category.schema";
 
 export const fetchCategoriesFlat = async (): Promise<CategoryItem[]> => {
-  const { data } = await axiosInstance.get("/categories");
+  const { data } = await axiosInstance.get("/categories?flat=true");
   return data;
 };
 
